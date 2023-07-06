@@ -6,9 +6,11 @@
         activity:Activity |undefined;
         closeFrom: () => void;
         createOrEdit:(activity: Activity) => void;
+        submitting:boolean;
+
     }
 
-    export default function ActivityFrom({activity :selectedActivity,closeFrom,createOrEdit}:Props){
+    export default function ActivityFrom({activity :selectedActivity,closeFrom,createOrEdit,submitting}:Props){
 
         const initialState = selectedActivity ?? {
             id:  '',
@@ -42,10 +44,10 @@
                     <Form.Input placeholder="Title" value={activity.title}  name="title" onChange={HandleInputChange}  />
                     <Form.TextArea placeholder="Description"  value={activity.description}  name="description" onChange={HandleInputChange} />
                     <Form.Input placeholder="category"  value={activity.category}  name="category" onChange={HandleInputChange} />
-                    <Form.Input placeholder="date"  value={activity.date}  name="date" onChange={HandleInputChange} />
+                    <Form.Input type='date' placeholder="Date"  value={activity.date}  name="date" onChange={HandleInputChange} />
                     <Form.Input placeholder="City"  value={activity.city}  name="city" onChange={HandleInputChange} />
                     <Form.Input placeholder="Venue"  value={activity.venue}  name="venue" onChange={HandleInputChange} />
-                    <Button floated='right' positive type="submit" content="Submit" />
+                    <Button loading={submitting} floated='right' positive type="submit" content="Submit" />
                     <Button  onClick={closeFrom} floated='right' type="button" content="Cancel"  />
                 </Form>
             </Segment>
