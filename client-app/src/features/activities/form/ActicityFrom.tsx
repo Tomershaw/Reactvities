@@ -27,7 +27,7 @@ import {v4  as uuid} from 'uuid'
 
         })
 
-        useEffect(() =>{
+        useEffect(()=>{
             if(id) loadActivity(id).then(activity => setActivity(activity!))
         },[id,loadActivity])
 
