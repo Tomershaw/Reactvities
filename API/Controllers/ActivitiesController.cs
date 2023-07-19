@@ -10,15 +10,15 @@ namespace API.Controllers
     public class ActivitiesController : BaseApiController
     {
         [HttpGet]
-        public async Task<ActionResult<List<Activity>>> GetActivites()
+        public async Task<IActionResult> GetActivites()
         {
-            return await Mediator.Send(new List.Query());
+            return HandleResult(await Mediator.Send(new List.Query()));
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Activity>> GetActivites(Guid id)
+        public async Task<IActionResult> GetActivity(Guid id)
         {
-            return await  Mediator.Send(new Detalis.Query{Id =id});
+          return HandleResult(await  Mediator.Send(new Detalis.Query{Id =id}));
         }
 
 
@@ -26,7 +26,7 @@ namespace API.Controllers
 
         public async Task<IActionResult> CreateActivity(Activity activity) 
         {
-            return Ok(await Mediator.Send(new Create.Commend {Activity=activity}));
+            return HandleResult(await Mediator.Send(new Create.Commend {Activity=activity}));
         }
 
         [HttpPut("{id}")]
@@ -34,13 +34,13 @@ namespace API.Controllers
         public async Task<IActionResult> EditActivity(Guid id , Activity activity)
         {
             activity.Id = id;
-            return Ok(await Mediator.Send( new Edit.Commend{Activity =activity}));
+            return HandleResult(await Mediator.Send( new Edit.Commend{Activity =activity}));
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult>DeleteActivity(Guid id)
         {
-            return Ok(await Mediator.Send(new Delete.Commend{Id =id}));
+            return HandleResult(await Mediator.Send(new Delete.Commend{Id =id}));
 
         }
     }
