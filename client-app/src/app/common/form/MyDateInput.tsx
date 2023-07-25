@@ -5,6 +5,7 @@ import DatePicker,{ReactDatePickerProps} from 'react-datepicker';
 
 
 
+
 export default function MyDateInput(props: Partial<ReactDatePickerProps>){
     const [field,meta,helpers] = useField(props.name!)
     return(
@@ -20,6 +21,7 @@ export default function MyDateInput(props: Partial<ReactDatePickerProps>){
                 <Label basic color='red'>{meta.error}</Label>
             ):null}
         </Form.Field>
+        
 
     )
    

@@ -13,6 +13,7 @@ import MyTextArea from '../../../app/common/form/MyTextArea';
 import { categoryOptions } from '../../../app/common/options/CategoryOptions';
 import MySelectInput from '../../../app/common/form/MySelectInput';
 import MyDateInput from '../../../app/common/form/MyDateInput';
+// import MyHebrewDateInput from '../../../app/common/form/MyHebrewDateInput';
 
 
 
@@ -91,6 +92,7 @@ export default observer(function ActivityFrom() {
                         />
                         {/* <MyHebrewDateInput
                             isHebrew
+                           
                         /> */}
                         <Header content='Location Details' sub color='teal' />
                         <MyTextInput placeholder="City" name='city' />
@@ -106,7 +108,6 @@ export default observer(function ActivityFrom() {
                 )}
 
             </Formik>
-
         </Segment>
     )
 })
