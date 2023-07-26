@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-    
+
     [ApiController]
     [Route("api/[controller]")]
     public class AccountController : ControllerBase
@@ -35,7 +35,7 @@ namespace API.Controllers
 
             if (result)
             {
-               return CreateUserObject(user);
+                return CreateUserObject(user);
             }
 
             return Unauthorized();
@@ -47,16 +47,22 @@ namespace API.Controllers
 
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
         {
-            if (await _userManager.Users.AnyAsync(x => x.UserName == registerDto.Username))
-            {
-                return BadRequest("UserName is alredy taken ");
 
-            }
+
             if (await _userManager.Users.AnyAsync(x => x.Email == registerDto.Email))
             {
-                return BadRequest("UserName is alredy taken ");
+                ModelState.AddModelError("email", "Email taken");
+                return ValidationProblem();
 
             }
+
+            if (await _userManager.Users.AnyAsync(x => x.UserName == registerDto.Username))
+            {
+                ModelState.AddModelError("username", "Username taken");
+                return ValidationProblem();
+
+            }
+
 
             var user = new AppUser
             {
@@ -75,7 +81,7 @@ namespace API.Controllers
         }
 
 
-      [Authorize]
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<UserDto>> GetCuttentUser()
         {
