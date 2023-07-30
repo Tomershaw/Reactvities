@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
-    [AllowAnonymous]
+    // [AllowAnonymous]
     public class ActivitiesController : BaseApiController
     {
-        
+
         [HttpGet]
         public async Task<IActionResult> GetActivites()
         {
@@ -18,29 +18,37 @@ namespace API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetActivity(Guid id)
         {
-          return HandleResult(await  Mediator.Send(new Detalis.Query{Id =id}));
+            return HandleResult(await Mediator.Send(new Detalis.Query { Id = id }));
         }
 
 
         [HttpPost]
 
-        public async Task<IActionResult> CreateActivity(Activity activity) 
+        public async Task<IActionResult> CreateActivity(Activity activity)
         {
-            return HandleResult(await Mediator.Send(new Create.Commend {Activity=activity}));
+            return HandleResult(await Mediator.Send(new Create.Commend { Activity = activity }));
         }
 
+        [Authorize(Policy ="IsActivityHost")]
         [HttpPut("{id}")]
-
-        public async Task<IActionResult> EditActivity(Guid id , Activity activity)
+        public async Task<IActionResult> EditActivity(Guid id, Activity activity)
         {
             activity.Id = id;
-            return HandleResult(await Mediator.Send( new Edit.Commend{Activity =activity}));
+            return HandleResult(await Mediator.Send(new Edit.Commend { Activity = activity }));
         }
 
+        [Authorize(Policy ="IsActivityHost")]
         [HttpDelete("{id}")]
-        public async Task<IActionResult>DeleteActivity(Guid id)
+        public async Task<IActionResult> DeleteActivity(Guid id)
         {
-            return HandleResult(await Mediator.Send(new Delete.Commend{Id =id}));
+            return HandleResult(await Mediator.Send(new Delete.Commend { Id = id }));
+
+        }
+
+        [HttpPost("{Id}/attend")]
+        public async Task<IActionResult> Attend (Guid id)
+        {
+            return HandleResult(await Mediator.Send(new UpdateAttendance.Commend { Id = id }));
 
         }
     }
