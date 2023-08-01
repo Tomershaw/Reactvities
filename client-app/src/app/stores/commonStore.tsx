@@ -18,7 +18,6 @@ export default class CommonStore{
                 }
             }
         )
-
     }
 
     setServerError(error: ServerError){
