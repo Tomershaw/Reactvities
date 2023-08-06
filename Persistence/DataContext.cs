@@ -11,6 +11,7 @@ namespace Persistence
         }
         public DbSet<Activity> Activities { get; set; }
         public DbSet<ActivityAttendee> ActivitiesAttendees { get; set; }
+        public DbSet<Photo> photos {get; set;}
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
