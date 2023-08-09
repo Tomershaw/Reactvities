@@ -3,7 +3,9 @@ export interface User{
     displayName:string ;
     token:string;
     image?: string ;
-
+    userFormValues?:UserFormValues;
+    canCreateActivity:boolean;
+    
 }
 
 export interface UserFormValues{
@@ -11,5 +13,4 @@ export interface UserFormValues{
     password:string ;
     displayName?: string ;
     username?:string;
-
 }

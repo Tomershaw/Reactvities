@@ -3,12 +3,22 @@ import { User, UserFormValues } from "../models/user";
 import agent from "../api/agent";
 import { store } from "./store";
 import { router } from "../router/Routes";
+import { Console } from "console";
 
 export default class UserStore {
     user:User | null =null;
+    userFormValues:UserFormValues | null =null
+    
     
     constructor(){
         makeAutoObservable(this)
+    }
+
+    get HostUsers () {
+        if(store.userStore.user){
+            return store.userStore.user.userFormValues?.email
+        }
+        return false;
     }
 
     get isLoggedIn() {
@@ -19,10 +29,16 @@ export default class UserStore {
         try{
             const user = await agent.Account.login(creds)
             store.commonStore.setToken(user.token);
-            runInAction(() => this.user =user);
+            runInAction(() => {
+                this.user = user;
+                // this.userFormValues = { ...creds }; // Set the email in userFormValues
+              });
             router.navigate('/activities');
             store.modalStore.closeModal();
             console.log(user);
+            console.log(creds.email);
+            console.log(this.userFormValues?.email)
+            console.log(this.user?.canCreateActivity)
         }catch (error){
         throw error
         }
@@ -56,5 +72,13 @@ export default class UserStore {
             console.log(error);
         }
     } 
+
+    setImage =(image:string) => {
+        if(this.user)  this.user.image =image
+    }
+
+ 
+
+
 
 }

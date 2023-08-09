@@ -3,11 +3,16 @@ import { Button, Container, Dropdown, Image, Menu } from 'semantic-ui-react';
 import { Link, NavLink } from 'react-router-dom';
 import { useStore } from '../stores/store';
 import { observer } from 'mobx-react-lite';
+import { User, UserFormValues } from "../models/user";
 
+// interface Props{
+//     userStore:User
 
+// }
 
 export default observer(function NavBar(){
-    const {userStore:{user,logout}} =useStore();
+    const {userStore:{user,logout,userFormValues,HostUsers}} =useStore();
+ 
     return(
         <Menu inverted fixed='top'>
             <Container>
@@ -17,14 +22,15 @@ export default observer(function NavBar(){
                 </Menu.Item>
                 <Menu.Item as={NavLink} to='/activities'  name='Activity'/>
                 <Menu.Item as={NavLink} to='/errors'  name='Errors'/>
+                {user?.canCreateActivity  &&
                 <Menu.Item>
                     <Button as={NavLink} to='/CreateActivity'  positive content="Create Activity"/>
-                </Menu.Item>
+                </Menu.Item>}
                 <Menu.Item position='right'>
                     <Image src = {user?.image || '/assets/user.png'} avatar spaced='right' />
                     <Dropdown pointing='top left'  text={user?.displayName}>
                         <Dropdown.Menu>
-                        <Dropdown.Item as={Link} to={`/profile/${user?.username}`}
+                        <Dropdown.Item as={Link} to={`/profiles/${user?.username}`}
                          text='my profile' icon='user'/>
                         <Dropdown.Item onClick={logout} text='logout' icon='power' />
                         </Dropdown.Menu>

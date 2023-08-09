@@ -12,6 +12,7 @@ import ModalContainer from '../common/modals/ModalContainer';
 function App() {
   const location = useLocation();
   const {commonStore,userStore} = useStore();
+  // const{userFormValues} =userStore
 
   useEffect(() => {
     if(commonStore.token){
@@ -29,7 +30,7 @@ function App() {
     <ToastContainer position='bottom-right' hideProgressBar theme='colored'  />
           {location.pathname === '/' ? <HomePage /> : (
         <>
-          <NavBar />
+          <NavBar  />
           <Container style={{ marginTop: '7em' }}>
             <Outlet />
           </Container>
