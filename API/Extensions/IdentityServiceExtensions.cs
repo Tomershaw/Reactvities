@@ -11,11 +11,12 @@ namespace API.Extensions
 {
     public static class IdentityServiceExtensions
     {
-        public static IServiceCollection AddIdentityServices(this IServiceCollection services,IConfiguration config)
+        public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration config)
         {
-            services.AddIdentityCore<AppUser>(opt => {
-                opt.Password.RequireNonAlphanumeric =false;
-                opt.User.RequireUniqueEmail =true;
+            services.AddIdentityCore<AppUser>(opt =>
+            {
+                opt.Password.RequireNonAlphanumeric = false;
+                opt.User.RequireUniqueEmail = true;
 
             })
             .AddEntityFrameworkStores<DataContext>();
@@ -24,27 +25,43 @@ namespace API.Extensions
 
             services.AddScoped<TokenService>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(opt =>{
-                opt.TokenValidationParameters =new TokenValidationParameters
+            .AddJwtBearer(opt =>
+            {
+                opt.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuerSigningKey =true,
-                    IssuerSigningKey =key,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = key,
                     ValidateIssuer = false,
-                    ValidateAudience =false
+                    ValidateAudience = false
                 };
 
+                opt.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+                        var path = context.HttpContext.Request.Path;
+
+                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/chat"))
+                        {
+                            context.Token = accessToken;
+                        }
+
+                        return Task.CompletedTask;
+                    }
+                };
             });
 
             services.AddAuthorization(opt =>
             {
-                opt.AddPolicy("IsActivityHost",policy =>
+                opt.AddPolicy("IsActivityHost", policy =>
                 {
                     policy.Requirements.Add(new IsHostRequirement());
 
                 });
             });
 
-            services.AddTransient<IAuthorizationHandler,IsHostRequirementHandler>();
+            services.AddTransient<IAuthorizationHandler, IsHostRequirementHandler>();
 
             return services;
 

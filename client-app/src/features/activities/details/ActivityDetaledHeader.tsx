@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { observer } from 'mobx-react-lite';
 import { Button, Header, Item, Segment, Image, Label } from 'semantic-ui-react'
 import { Activity } from "../../../app/models/activity";
@@ -26,7 +26,9 @@ interface Props {
 
 export default observer(function ActivityDetailedHeader({ activity }: Props) {
     const { activityStore: { updateAttendance, loading, cancelActivityToggle } } = useStore();
+
     return (
+        
         <Segment.Group>
             <Segment basic attached='top' style={{ padding: '0' }}>
                 {activity.isCancelled &&
@@ -54,6 +56,7 @@ export default observer(function ActivityDetailedHeader({ activity }: Props) {
             </Segment>
             <Segment clearing attached='bottom'>
                 {activity.isHost ? (
+                   
                     <>
                         <Button 
                         color={activity.isCancelled ? 'green' : 'red'}

@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite';
 import react, { SyntheticEvent, useState } from 'react';
 import { Card, Header, Tab, Image, Grid, Button } from 'semantic-ui-react';
-import photo, { Profile } from '../../app/models/profile';
+import Photo, { Profile } from '../../app/models/profile';
 import { useStore } from '../../app/stores/store';
 import PhotoUploadWidget from '../../app/common/ImageUpload/PhotoUploadWidget';
 
@@ -16,12 +16,12 @@ export default observer(function ProfilePhotos({ profile }: Props) {
     const [target,setTarget] = useState('');
    
     
-    function handleSetMainPhoto(photo:photo, e: SyntheticEvent<HTMLButtonElement>){
+    function handleSetMainPhoto(photo:Photo, e: SyntheticEvent<HTMLButtonElement>){
         setTarget(e.currentTarget.name);
         setMainPhoto(photo);
     }
 
-    function handleDeletePhoto(photo:photo , e: SyntheticEvent<HTMLButtonElement>){
+    function handleDeletePhoto(photo:Photo , e: SyntheticEvent<HTMLButtonElement>){
         setTarget(e.currentTarget.name);
         deletePhoto(photo)
 

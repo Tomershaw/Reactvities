@@ -36,9 +36,6 @@ export default class UserStore {
             router.navigate('/activities');
             store.modalStore.closeModal();
             console.log(user);
-            console.log(creds.email);
-            console.log(this.userFormValues?.email)
-            console.log(this.user?.canCreateActivity)
         }catch (error){
         throw error
         }

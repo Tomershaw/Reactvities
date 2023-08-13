@@ -203,6 +203,11 @@ export default class ActivityStore {
         }
     }
 
+    clearSelectedActivity =()=>{
+        this.selectedActivity =undefined
+        console.log('activitySelected',this.selectedActivity)
+    }
+
 
 
 }

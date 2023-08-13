@@ -1,5 +1,5 @@
 import { makeAutoObservable, runInAction } from "mobx";
-import photo, { Profile } from "../models/profile";
+import Photo, { Profile } from "../models/profile";
 import agent from "../api/agent";
 import { store } from "./store";
 
@@ -60,7 +60,7 @@ export default  class ProfileStore{
 
     }
 
-    setMainPhoto = async (photo:photo) =>{
+    setMainPhoto = async (photo:Photo) =>{
         this.loading=true;
         try{
             await agent.Profiles.setMainPhoto(photo.id)
@@ -80,7 +80,7 @@ export default  class ProfileStore{
         }
     }
 
-    deletePhoto = async (photo: photo) =>{
+    deletePhoto = async (photo: Photo) =>{
         this.loading =true
         await agent.Profiles.deletePhoto(photo.id)
         try{

@@ -5,7 +5,7 @@ import { router } from "../router/Routes";
 import { store } from "../stores/store";
 
 import { User, UserFormValues } from "../models/user";
-import photo, { Profile } from "../models/profile";
+import Photo, { Profile } from "../models/profile";
 
 const sleep = (delay: number) => {
     return new Promise((resolve) => {
@@ -90,7 +90,7 @@ const Profiles = {
   uploadPhoto:(file:Blob) =>{
     let formData = new FormData();
     formData.append('file',file);
-    return axios.post<photo>('photos',formData ,{
+    return axios.post<Photo>('photos',formData ,{
         headers:{'Content-Type':'multipart/form-data'}
     })
   },

@@ -5,7 +5,7 @@ export interface Profile{
     displayName:string;
     image?:string;
     bio?:string;
-    photos?:photo[];    
+    photos?:Photo[];    
 }
 
 export class Profile implements Profile{
@@ -16,7 +16,7 @@ export class Profile implements Profile{
     }
 }
 
-export default interface photo
+export default interface Photo
 {
     id:string;
     url:string;
