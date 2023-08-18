@@ -29,7 +29,7 @@ namespace Application.Photos
 
             public async Task<Result<Photo>> Handle(Command request, CancellationToken cancellationToken)
             {
-                var user = await _context.Users.Include(p => p.photos)
+                var user = await _context.Users.Include(p => p.Photos)
                 .FirstOrDefaultAsync(x => x.UserName == _userAccessor.GetUsername());
 
                 if(user == null ) return null;
@@ -42,9 +42,9 @@ namespace Application.Photos
                     Id = PhotoUploadResult.PublicId
                  };
 
-                 if (!user.photos.Any(x => x.IsMain)) photo.IsMain = true;
+                 if (!user.Photos.Any(x => x.IsMain)) photo.IsMain = true;
     
-                 user.photos.Add(photo);
+                 user.Photos.Add(photo);
 
                  var result  =await _context.SaveChangesAsync() > 0;
 

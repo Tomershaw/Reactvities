@@ -25,16 +25,16 @@ namespace Application.Photos
 
             public async Task<Result<Unit>> Handle(Commend request, CancellationToken cancellationToken)
             {
-               var user  = await _context.Users.Include(p => p.photos)
+               var user  = await _context.Users.Include(p => p.Photos)
                .FirstOrDefaultAsync(x => x.UserName == _userAccessor.GetUsername());
 
                if(user == null) return null;
 
-               var photo = user.photos.FirstOrDefault(x => x.Id == request.Id);
+               var photo = user.Photos.FirstOrDefault(x => x.Id == request.Id);
 
                if(photo == null) return null;
                 
-                var currentMain = user.photos.FirstOrDefault(x => x.IsMain);
+                var currentMain = user.Photos.FirstOrDefault(x => x.IsMain);
 
                 if(currentMain != null) currentMain.IsMain = false; 
 

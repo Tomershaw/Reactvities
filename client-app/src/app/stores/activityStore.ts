@@ -208,6 +208,18 @@ export default class ActivityStore {
         console.log('activitySelected',this.selectedActivity)
     }
 
+    updateAttendeeFollowing = (username:string) =>{
+        console.log(username)
+            this.activityRegistry.forEach(activity  =>{
+                activity.attendees?.forEach(attendee =>{
+                    if(attendee.userName== username){
+                        attendee.following ? attendee.followersCount-- : attendee.followersCount++
+                        attendee.following = !attendee.following
+                    }
+                })
+            })
+    }
+
 
 
 }

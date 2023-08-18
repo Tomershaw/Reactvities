@@ -27,12 +27,12 @@ namespace Application.Photos
 
             public async Task<Result<Unit>> Handle(Commend request, CancellationToken cancellationToken)
             {
-                var user  = await  _context.Users.Include(p => p.photos)
+                var user  = await  _context.Users.Include(p => p.Photos)
                 .FirstOrDefaultAsync(x => x.UserName == _userAccessor.GetUsername());
                  
                  if(user == null) return null;
 
-                  var photo =user.photos.FirstOrDefault(x => x.Id == request.Id);
+                  var photo =user.Photos.FirstOrDefault(x => x.Id == request.Id);
 
                   if(photo == null) return null;
                   
@@ -42,7 +42,7 @@ namespace Application.Photos
 
                   if(result == null) return Result<Unit>.Failure("problem deleting photo from Cloudinary");
 
-                  user.photos.Remove(photo);
+                  user.Photos.Remove(photo);
                    var  success = await _context.SaveChangesAsync() > 0;
 
                    if(success) return Result<Unit>.Success(Unit.Value);
