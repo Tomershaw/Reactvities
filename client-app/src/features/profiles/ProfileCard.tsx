@@ -9,7 +9,7 @@ interface Props {
     profile:Profile;
 }
 
-export default observer(function ProfileCard({profile}:Props){
+export default  (function ProfileCard({profile}:Props){
     return(
         <Card as={Link} to={`/profiles/${profile.userName}`}>
             <Image src={profile.image || '/assets/user.png'} />

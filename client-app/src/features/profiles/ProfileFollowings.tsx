@@ -22,7 +22,7 @@ export default observer(function ProfileFollowings() {
                 </Grid.Column>
                 <Grid.Column width='16'>
                     <Card.Group itemsPerRow='5'>
-                        {followings.map(profile => (
+                        {followings.map(profile =>(
                             <ProfileCard key={profile.userName} profile={profile} />
                         ))}
                     </Card.Group>
