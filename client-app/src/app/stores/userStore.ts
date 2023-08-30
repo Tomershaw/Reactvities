@@ -4,10 +4,13 @@ import agent from "../api/agent";
 import { store } from "./store";
 import { router } from "../router/Routes";
 import { Console } from "console";
+import CommonStore from "./commonStore";
 
 export default class UserStore {
     user:User | null =null;
     userFormValues:UserFormValues | null =null
+    fbLoading = false;
+
     
     
     constructor(){
@@ -72,6 +75,27 @@ export default class UserStore {
 
     setImage =(image:string) => {
         if(this.user)  this.user.image =image
+    }
+
+    facebookLogin = async (accessToken:string) => {
+        this.fbLoading = true;
+        try{
+            const user  =await agent.Account.fbLogin(accessToken)
+            console.log(accessToken)
+            store.commonStore.setToken(user.token)
+            runInAction(() =>{
+                this.user= user
+                this.fbLoading =false;
+            })
+            router.navigate('/activities');
+
+        }catch (error) {
+            console.log(error)
+            runInAction(() => {
+                this.fbLoading = false;
+            })
+        }
+
     }
 
  
