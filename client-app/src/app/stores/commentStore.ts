@@ -1,6 +1,6 @@
 import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
 import { ChatComment } from "../models/comment";
-import { makeAutoObservable, runInAction, values } from "mobx";
+import { makeAutoObservable, runInAction } from "mobx";
 import { store } from "./store";
 export default class commentStore{
     comments:ChatComment[] =[];
@@ -13,8 +13,8 @@ export default class commentStore{
     createHubConnection =(activityId:string)=>{
         if(store.activityStore.selectedActivity){
             this.hubConnection = new HubConnectionBuilder()
-            .withUrl('http://localhost:5000/chat?activityId=' + activityId,{
-                accessTokenFactory:() => store.userStore.user?.token!
+            .withUrl( import.meta.env.VITE_CHAT_URL +'?activityId=' + activityId,{
+                accessTokenFactory:() => store.userStore.user?.token as string
             })
             .withAutomaticReconnect()
             .configureLogging(LogLevel.Information)
@@ -35,7 +35,6 @@ export default class commentStore{
                 runInAction(() => {
                     comment.createAt =  new Date(comment.createAt)
                     this.comments.unshift(comment)
-
                 } );
             })
         }
@@ -52,7 +51,7 @@ export default class commentStore{
     }
 
 
-    addComment =async (values:any) => {
+    addComment =async (values:{body: string ,  activityId?:string} ) => {
         values.activityId = store.activityStore.selectedActivity?.id;
         try{
             await this.hubConnection?.invoke('SendComment',values)

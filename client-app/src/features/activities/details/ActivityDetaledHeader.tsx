@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react'
 import { observer } from 'mobx-react-lite';
 import { Button, Header, Item, Segment, Image, Label } from 'semantic-ui-react'
 import { Activity } from "../../../app/models/activity";

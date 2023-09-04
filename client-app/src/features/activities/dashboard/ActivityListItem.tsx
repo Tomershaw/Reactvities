@@ -1,10 +1,8 @@
-import React from "react";
 import { Button, Icon, Item, ItemContent, Label, Segment } from "semantic-ui-react";
 import { Activity } from "../../../app/models/activity";
 import { Link } from "react-router-dom";
 import { format } from 'date-fns';
 import ActivityListItemAttendee from "./ActivityListItemAttendee";
-import { useObserver } from "mobx-react-lite";
 
 interface Props {
     activity: Activity

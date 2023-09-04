@@ -1,4 +1,3 @@
-import React from 'react';
 import {Tab, Grid, Header, Card} from "semantic-ui-react";
 import ProfileCard from "./ProfileCard";
 import {useStore} from "../../app/stores/store";

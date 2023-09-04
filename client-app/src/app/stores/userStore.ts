@@ -3,7 +3,6 @@ import { User, UserFormValues } from "../models/user";
 import agent from "../api/agent";
 import { store } from "./store";
 import { router } from "../router/Routes";
-import { Console } from "console";
 
 export default class UserStore {
     user:User | null =null;
@@ -37,6 +36,7 @@ export default class UserStore {
             store.modalStore.closeModal();
             console.log(user);
         }catch (error){
+            console.log(error)
         throw error
         }
     }
@@ -50,6 +50,7 @@ export default class UserStore {
             store.modalStore.closeModal();
             console.log(user);
         }catch (error){
+         console.log(error)
         throw error
         }
     }

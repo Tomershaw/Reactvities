@@ -1,9 +1,7 @@
-import React from 'react';
 import { Button, Container, Dropdown, Image, Menu } from 'semantic-ui-react';
 import { Link, NavLink } from 'react-router-dom';
 import { useStore } from '../stores/store';
 import { observer } from 'mobx-react-lite';
-import { User, UserFormValues } from "../models/user";
 
 // interface Props{
 //     userStore:User
@@ -11,7 +9,7 @@ import { User, UserFormValues } from "../models/user";
 // }
 
 export default observer(function NavBar(){
-    const {userStore:{user,logout,userFormValues,HostUsers}} =useStore();
+    const {userStore:{user,logout}} =useStore();
  
     return(
         <Menu inverted fixed='top'>

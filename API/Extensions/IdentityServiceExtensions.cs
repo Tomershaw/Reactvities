@@ -45,6 +45,7 @@ namespace API.Extensions
                         if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/chat"))
                         {
                             context.Token = accessToken;
+                           
                         }
 
                         return Task.CompletedTask;

@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Divider, Grid, GridColumn, Header, Item,Segment, Statistic} from 'semantic-ui-react';
 import { Profile } from '../../app/models/profile';
 import { observer } from 'mobx-react-lite';

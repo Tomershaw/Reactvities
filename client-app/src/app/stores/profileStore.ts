@@ -4,9 +4,9 @@ import agent from "../api/agent";
 import { store } from "./store";
 
 export default  class ProfileStore{
-    handleTabChange(activeIndex: any) {
-        throw new Error("Method not implemented.");
-    }
+    // handleTabChange(activeIndex: any) {
+    //     throw new Error("Method not implemented.");
+    // }
     profile: Profile | null = null;
     loadingProfile = false;
     uploading = false;
@@ -33,7 +33,7 @@ export default  class ProfileStore{
         )
     }   
 
-    setActiveTab = (activeTab: any) =>{
+    setActiveTab = (activeTab: number) =>{
         this.activeTab =activeTab
     }
 
