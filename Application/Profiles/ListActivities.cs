@@ -43,7 +43,7 @@ namespace Application.Profiles
                     {
                         "past" => query.Where(a => a.Date <= today),
                          "hosting" => query.Where(h => h.HostUsername == request.Username),
-                         _ => query.Where(d => d.Date >= DateTime.Now)
+                         _ => query.Where(d => d.Date >= DateTime.UtcNow)
 
                     };
 
