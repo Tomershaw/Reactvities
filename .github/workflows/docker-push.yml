@@ -1,12 +1,11 @@
-name: docker-push1
-
+name: docker-build-push
+ 
 on:
-workflow_dispatch:
-
+  workflow_dispatch:
   # push:
-  #   branches:
-  #     - 'main'
-
+   #   branches:
+   #     - 'main'
+ 
 jobs:
   docker:
     runs-on: ubuntu-latest
@@ -22,7 +21,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
         name: Build and push
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v3
         with:
           push: true
           tags: tomershaw/reactivities:latest
