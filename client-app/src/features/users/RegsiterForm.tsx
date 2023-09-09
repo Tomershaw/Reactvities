@@ -33,7 +33,7 @@ export default observer(function RegsiterForm() {
                         name='error' render={  () =>
                             <ValidationError errors={errors.error as unknown as string[]} />}
                     />
-                    {/* || '').split("") */}
+                   
 
                     <Button
                         disabled={!isValid || !dirty || isSubmitting}
