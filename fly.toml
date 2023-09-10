@@ -14,7 +14,7 @@ primary_region = "cdg"
   Cloudinary__Cloudname="dkhj9nflm"
   Cloudinary__ApiKey="211527574944433"
 
-
+ 
 [http_service]
   internal_port = 8080
   force_https = true
