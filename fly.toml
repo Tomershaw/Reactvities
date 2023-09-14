@@ -13,6 +13,7 @@ primary_region = "cdg"
   ASPNETCORE_URLS="http://+:8080"
   Cloudinary__Cloudname="dkhj9nflm"
   Cloudinary__ApiKey="211527574944433"
+  Facebook__AppId="221460500899348"
 
  
 [http_service]
