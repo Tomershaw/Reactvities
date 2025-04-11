@@ -5,46 +5,58 @@ using Domain;
 
 namespace Application.Core
 {
+    // Defines AutoMapper configuration profiles to map between domain entities and DTOs.
+    // Enables efficient and consistent object transformation across the application.
+
     public class MappingProfiles : Profile
     {
-
         public MappingProfiles()
         {
+            // Used for dynamic context-aware mapping (e.g., checking if the current user is following someone)
             string currentUsername = null;
+
+            // Basic mapping between Activity entity and itself (used in Edit scenarios)
             CreateMap<Activity, Activity>();
+
+            // Map Activity to ActivityDto
             CreateMap<Activity, ActivityDto>()
                 .ForMember(d => d.HostUsername,
-                        o => o.MapFrom(s =>
-                            s.Attendees.FirstOrDefault(x => x.IsHost).AppUser.UserName));
+                    o => o.MapFrom(s =>
+                        s.Attendees.FirstOrDefault(x => x.IsHost).AppUser.UserName));
+
+            // Map ActivityAttendee to AttendeeDto
             CreateMap<ActivityAttendee, AttendeeDto>()
                 .ForMember(d => d.DisplayName, o => o.MapFrom(s => s.AppUser.DisplayName))
                 .ForMember(d => d.UserName, o => o.MapFrom(s => s.AppUser.UserName))
                 .ForMember(d => d.Bio, o => o.MapFrom(s => s.AppUser.Bio))
                 .ForMember(d => d.Image, o => o.MapFrom(s => s.AppUser.Photos.FirstOrDefault(x => x.IsMain).Url))
-                 .ForMember(d => d.FollowersCount, o => o.MapFrom(s => s.AppUser.Followers.Count))
+                .ForMember(d => d.FollowersCount, o => o.MapFrom(s => s.AppUser.Followers.Count))
                 .ForMember(d => d.FollowingCount, o => o.MapFrom(s => s.AppUser.Followings.Count))
-                .ForMember(d => d.Following, o => o.MapFrom(s => s.AppUser.Followers.Any(x => x.Observer.UserName == currentUsername)));
+                .ForMember(d => d.Following, o => o.MapFrom(s =>
+                    s.AppUser.Followers.Any(x => x.Observer.UserName == currentUsername)));
+
+            // Map AppUser to Profile DTO (used in profile pages)
             CreateMap<AppUser, Profiles.Profile>()
-            .ForMember(d => d.Image, o => o.MapFrom(s => s.Photos.FirstOrDefault(x => x.IsMain).Url))
-            .ForMember(d => d.FollowersCount, o => o.MapFrom(s => s.Followers.Count))
-            .ForMember(d => d.FollowingCount, o => o.MapFrom(s => s.Followings.Count))
-            .ForMember(d => d.Following, o => o.MapFrom(s => s.Followers.Any(x => x.Observer.UserName == currentUsername)));
+                .ForMember(d => d.Image, o => o.MapFrom(s => s.Photos.FirstOrDefault(x => x.IsMain).Url))
+                .ForMember(d => d.FollowersCount, o => o.MapFrom(s => s.Followers.Count))
+                .ForMember(d => d.FollowingCount, o => o.MapFrom(s => s.Followings.Count))
+                .ForMember(d => d.Following, o => o.MapFrom(s =>
+                    s.Followers.Any(x => x.Observer.UserName == currentUsername)));
 
+            // Map Comment entity to CommentDto
             CreateMap<Comment, CommentDto>()
-            .ForMember(d => d.DisplayName, o => o.MapFrom(s => s.Author.DisplayName))
-            .ForMember(d => d.Username, o => o.MapFrom(s => s.Author.UserName))
-            .ForMember(d => d.Image, o => o.MapFrom(s => s.Author.Photos.FirstOrDefault(x => x.IsMain).Url));
+                .ForMember(d => d.DisplayName, o => o.MapFrom(s => s.Author.DisplayName))
+                .ForMember(d => d.Username, o => o.MapFrom(s => s.Author.UserName))
+                .ForMember(d => d.Image, o => o.MapFrom(s => s.Author.Photos.FirstOrDefault(x => x.IsMain).Url));
 
+            // Map ActivityAttendee to UserActivityDto (used in profile activity listings)
             CreateMap<ActivityAttendee, Profiles.UserActivityDto>()
-            .ForMember(d => d.Id , o => o.MapFrom(s => s.Activity.Id))
-            .ForMember(d => d.Title, o => o.MapFrom(s => s.Activity.Title))
-            .ForMember(d => d.Category, o => o.MapFrom(s => s.Activity.Category))
-            .ForMember(d => d.Date, o => o.MapFrom(s => s.Activity.Date))
-            .ForMember(d => d.HostUsername, o => o.MapFrom(s => s.Activity.Attendees.FirstOrDefault(x => x.IsHost).AppUser.UserName));
-            
-
-
-
+                .ForMember(d => d.Id, o => o.MapFrom(s => s.Activity.Id))
+                .ForMember(d => d.Title, o => o.MapFrom(s => s.Activity.Title))
+                .ForMember(d => d.Category, o => o.MapFrom(s => s.Activity.Category))
+                .ForMember(d => d.Date, o => o.MapFrom(s => s.Activity.Date))
+                .ForMember(d => d.HostUsername, o => o.MapFrom(s =>
+                    s.Activity.Attendees.FirstOrDefault(x => x.IsHost).AppUser.UserName));
         }
     }
 }

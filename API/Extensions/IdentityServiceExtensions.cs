@@ -9,65 +9,72 @@ using Persistence;
 
 namespace API.Extensions
 {
+    // Extension method to configure identity, authentication, and authorization services
     public static class IdentityServiceExtensions
     {
         public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration config)
         {
+            // Configure ASP.NET Identity for user management with custom options
             services.AddIdentityCore<AppUser>(opt =>
             {
-                opt.Password.RequireNonAlphanumeric = false;
-                opt.User.RequireUniqueEmail = true;
-
+                opt.Password.RequireNonAlphanumeric = false; // Simplify password requirements
+                opt.User.RequireUniqueEmail = true;          // Ensure email uniqueness
             })
             .AddEntityFrameworkStores<DataContext>();
+
             services.AddAuthentication();
+
+            // Create a symmetric security key from the secret in app settings
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
 
+            // Register the token generation service
             services.AddScoped<TokenService>();
+
+            // Configure JWT authentication
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(opt =>
-            {
-                opt.TokenValidationParameters = new TokenValidationParameters
+                .AddJwtBearer(opt =>
                 {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = key,
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    ValidateLifetime= true,
-                    ClockSkew = TimeSpan.Zero
-                };
-
-                opt.Events = new JwtBearerEvents
-                {
-                    OnMessageReceived = context =>
+                    opt.TokenValidationParameters = new TokenValidationParameters
                     {
-                        var accessToken = context.Request.Query["access_token"];
-                        var path = context.HttpContext.Request.Path;
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = key,
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.Zero // Disable time tolerance for expired tokens
+                    };
 
-                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/chat"))
+                    // Allow JWT tokens via query string for SignalR (e.g., /chat?access_token=...)
+                    opt.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
                         {
-                            context.Token = accessToken;
-                           
+                            var accessToken = context.Request.Query["access_token"];
+                            var path = context.HttpContext.Request.Path;
+
+                            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/chat"))
+                            {
+                                context.Token = accessToken;
+                            }
+
+                            return Task.CompletedTask;
                         }
+                    };
+                });
 
-                        return Task.CompletedTask;
-                    }
-                };
-            });
-
+            // Configure authorization policy: "IsActivityHost"
             services.AddAuthorization(opt =>
             {
                 opt.AddPolicy("IsActivityHost", policy =>
                 {
                     policy.Requirements.Add(new IsHostRequirement());
-
                 });
             });
 
+            // Register handler for the "IsActivityHost" policy
             services.AddTransient<IAuthorizationHandler, IsHostRequirementHandler>();
 
             return services;
-
         }
     }
 }

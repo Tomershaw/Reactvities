@@ -2,6 +2,10 @@ using Domain;
 
 namespace Application.Activities
 {
+    // Data Transfer Object representing a user attending an activity.
+    // Used to display attendee information in activity listings or details view.
+    // Includes profile info and social data (following/followers count).
+
     public class AttendeeDto
     {
         public string UserName { get; set; }
@@ -11,7 +15,5 @@ namespace Application.Activities
         public bool Following { get; set; }
         public int FollowersCount { get; set; }
         public int FollowingCount { get; set; }
-
-
     }
 }

@@ -11,33 +11,30 @@ using Persistence;
 
 namespace API.Extensions
 {
+    // Extension method for IServiceCollection to register all application-level services
     public static class ApplicationServiceExtensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config)
         {
-
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            // Swagger/OpenAPI support
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
+
+            // Configures the database context with environment-based connection string
             services.AddDbContext<DataContext>(options =>
             {
                 var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-
                 string connStr;
 
-                // Depending on if in development or production, use either FlyIO
-                // connection string, or development connection string from env var.
+                // Use connection string from appsettings.json in Development
                 if (env == "Development")
                 {
-                    // Use connection string from file.
                     connStr = config.GetConnectionString("DefaultConnection");
                 }
                 else
                 {
-                    // Use connection string provided at runtime by FlyIO.
+                    // Parse DATABASE_URL from FlyIO in Production
                     var connUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
-
-                    // Parse connection URL to connection string for Npgsql
                     connUrl = connUrl.Replace("postgres://", string.Empty);
                     var pgUserPass = connUrl.Split("@")[0];
                     var pgHostPortDb = connUrl.Split("@")[1];
@@ -52,13 +49,12 @@ namespace API.Extensions
                     connStr = $"Server={updatedHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};";
                 }
 
-                // Whether the connection string came from the local development configuration file
-                // or from the environment variable from FlyIO, use it to set up your DbContext.
+                // Apply the connection string to Npgsql database provider
                 options.UseNpgsql(connStr);
             });
 
-
-             services.AddCors(opt =>
+            // Configures CORS to allow client app communication (e.g. React frontend)
+            services.AddCors(opt =>
             {
                 opt.AddPolicy("CorsPolicy", policy =>
                 {
@@ -66,23 +62,35 @@ namespace API.Extensions
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials()
-                        .WithExposedHeaders("www-Authenticate","pagination")
+                        .WithExposedHeaders("www-Authenticate", "pagination")
                         .WithOrigins("http://localhost:3000", "https://localhost:3000");
                 });
             });
 
+            // MediatR registration for CQRS handlers
             services.AddMediatR(typeof(List.Handler));
+
+            // AutoMapper registration for DTO <-> Domain mapping
             services.AddAutoMapper(typeof(MappingProfiles).Assembly);
+
+            // FluentValidation registration for automatic model validation
             services.AddFluentValidationAutoValidation();
             services.AddValidatorsFromAssemblyContaining<Create>();
+
+            // HttpContext accessor for accessing current user info
             services.AddHttpContextAccessor();
+
+            // Dependency injection for custom interfaces/services
             services.AddScoped<IUserAccessor, UserAccessor>();
             services.AddScoped<IPhotoAccessor, PhotoAccessor>();
+
+            // Configuration for Cloudinary image storage service
             services.Configure<CloudinarySettings>(config.GetSection("Cloudinary"));
+
+            // SignalR registration for real-time communication (e.g. chat)
             services.AddSignalR();
 
             return services;
-
         }
     }
 }

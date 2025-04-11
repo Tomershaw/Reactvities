@@ -10,20 +10,24 @@ using System.Linq;
 
 namespace Application.Activities
 {
+    // CQRS query to retrieve a paginated, filtered list of activities
+
     public class List
     {
+        // Query containing pagination and filtering parameters
         public class Query : IRequest<Result<PagedList<ActivityDto>>>
         {
             public ActivityParams Params { get; set; }
-
         }
 
+        // Handler that processes the query and returns a paginated result
         public class Handler : IRequestHandler<Query, Result<PagedList<ActivityDto>>>
         {
             private readonly DataContext _context;
             private readonly IMapper _mapper;
             private readonly IUserAccessor _userAccessor;
 
+            // Injects DB context, AutoMapper, and current user accessor
             public Handler(DataContext context, IMapper mapper, IUserAccessor userAccessor)
             {
                 _userAccessor = userAccessor;
@@ -31,14 +35,18 @@ namespace Application.Activities
                 _context = context;
             }
 
-
+            // Main handler logic:
+            // - filters activities by date
+            // - supports additional filters: "IsGoing", "IsHost"
+            // - projects to ActivityDto using AutoMapper (no full entity loading)
+            // - returns a paginated result using custom paging helper
             public async Task<Result<PagedList<ActivityDto>>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var query = _context.Activities
                     .Where(d => d.Date >= request.Params.StartDate)
                     .OrderBy(d => d.Date)
                     .ProjectTo<ActivityDto>(_mapper.ConfigurationProvider,
-                    new { currentUsername = _userAccessor.GetUsername() })
+                        new { currentUsername = _userAccessor.GetUsername() })
                     .AsQueryable();
 
                 if (request.Params.IsGoing && !request.Params.IsHost)
@@ -50,14 +58,13 @@ namespace Application.Activities
                 {
                     query = query.Where(x => x.HostUsername == _userAccessor.GetUsername());
                 }
-                // var activities = await _context.Activities
-                //     .ProjectTo<ActivityDto>(_mapper.ConfigurationProvider, new { currentUsername = _userAccessor.GetUsername() })
-                //     .ToListAsync(cancellationToken);
-
-                // var activitiesToReturn =_mapper.Map<List<ActivityDto>>(activities);
 
                 return Result<PagedList<ActivityDto>>.Success(
-                    await PagedList<ActivityDto>.CreateAsync(query, request.Params.PageNumber, request.Params.PageSize)
+                    await PagedList<ActivityDto>.CreateAsync(
+                        query,
+                        request.Params.PageNumber,
+                        request.Params.PageSize
+                    )
                 );
             }
         }

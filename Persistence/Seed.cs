@@ -1,6 +1,10 @@
 using Domain;
 using Microsoft.AspNetCore.Identity;
-
+// This class is responsible for seeding initial data into the database
+// It creates users and activities if they do not already exist
+// Users are created with a username, email, and password
+// Activities are created with categories, dates, cities, and venues
+// Each activity has a list of attendees, with one designated as the host
 namespace Persistence
 {
     public class Seed

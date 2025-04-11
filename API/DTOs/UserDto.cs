@@ -1,11 +1,23 @@
 namespace API.DTOs
 {
+    // Data Transfer Object representing a user returned to the client
+    // This is used after successful authentication or when fetching user details
+
     public class UserDto
     {
+        // The name displayed in the UI (profile name)
         public string DisplayName { get; set; }
+
+        // The JWT access token used for authenticated requests
         public string Token { get; set; }
+
+        // URL to the user's main profile image
         public string Image { get; set; }
+
+        // The user's unique username
         public string Username { get; set; }
-        public bool CanCreateActivity {get; set;}
+
+        // Indicates whether the user is allowed to create activities (e.g. host events)
+        public bool CanCreateActivity { get; set; }
     }
 }

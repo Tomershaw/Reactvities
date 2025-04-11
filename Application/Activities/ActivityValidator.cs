@@ -3,6 +3,10 @@ using FluentValidation;
 
 namespace Application.Activities
 {
+    // FluentValidation validator for the Activity domain model.
+    // Ensures that required fields are not empty before processing commands
+    // such as Create or Edit.
+
     public class ActivityValidator : AbstractValidator<Activity>
     {
         public ActivityValidator()
