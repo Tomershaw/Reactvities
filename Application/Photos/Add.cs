@@ -9,23 +9,30 @@ using Persistence;
 namespace Application.Photos
 {
     // CQRS command for uploading a photo and adding it to the user's profile
+    // This operation uploads the photo to an external storage provider and updates the user's photo collection.
 
     public class Add
     {
         // Command carries the uploaded file
         public class Command : IRequest<Result<Photo>>
         {
-            public IFormFile File { get; set; } // Uploaded photo file from form
+            // Uploaded photo file from the form
+            public IFormFile File { get; set; }
         }
 
         // Handler performs the photo upload and updates the user entity
         public class Handler : IRequestHandler<Command, Result<Photo>>
         {
+            // Database context for accessing user and photo data
             public readonly DataContext _context;
+
+            // Service for interacting with the external photo storage provider
             private readonly IPhotoAccessor _photoAccessor;
+
+            // Service to access the currently logged-in user's information
             public readonly IUserAccessor _userAccessor;
 
-            // Injects database, photo accessor, and user accessor services
+            // Constructor injecting database, photo accessor, and user accessor services
             public Handler(DataContext context, IPhotoAccessor photoAccessor, IUserAccessor userAccessor)
             {
                 _userAccessor = userAccessor;
@@ -40,6 +47,7 @@ namespace Application.Photos
                     .Include(p => p.Photos)
                     .FirstOrDefaultAsync(x => x.UserName == _userAccessor.GetUsername());
 
+                // Return null if the user is not found
                 if (user == null) return null;
 
                 // Upload photo to external storage (e.g., Cloudinary)
@@ -61,10 +69,10 @@ namespace Application.Photos
                 // Save changes to the database
                 var result = await _context.SaveChangesAsync() > 0;
 
+                // Return success or failure based on the database operation result
                 if (result) return Result<Photo>.Success(photo);
                 return Result<Photo>.Failure("problem adding photo");
             }
         }
     }
 }
-// Compare this snippet from Application/Photos/PhotoUploadResult.cs:

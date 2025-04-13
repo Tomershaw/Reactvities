@@ -7,55 +7,72 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace API.Services
 {
-    // Service responsible for creating JWT access tokens and secure refresh tokens
+    /// <summary>
+    /// Service responsible for creating JWT access tokens and secure refresh tokens.
+    /// </summary>
     public class TokenService
     {
-        // Provides access to configuration settings (e.g., secret key)
-        public IConfiguration _config;
+        /// <summary>
+        /// Provides access to configuration settings (e.g., secret key).
+        /// </summary>
+        private readonly IConfiguration _config;
 
-        // Constructor that injects configuration
+        /// <summary>
+        /// Constructor that injects configuration.
+        /// </summary>
+        /// <param name="config">The application configuration.</param>
         public TokenService(IConfiguration config)
         {
             _config = config;
         }
 
-        // Creates a JWT access token for a given user
+        /// <summary>
+        /// Creates a JWT access token for a given user.
+        /// </summary>
+        /// <param name="user">The user for whom the token is created.</param>
+        /// <returns>A signed JWT access token as a string.</returns>
         public string CreateToken(AppUser user)
         {
-            // Define claims to be embedded in the token
+            // Define claims to be embedded in the token, representing user identity and attributes.
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.NameIdentifier, user.Id),
-                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Name, user.UserName), // User's username
+                new Claim(ClaimTypes.NameIdentifier, user.Id), // User's unique identifier
+                new Claim(ClaimTypes.Email, user.Email), // User's email address
             };
 
-            // Create a symmetric security key using the secret from configuration
+            // Create a symmetric security key using the secret key from configuration.
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["TokenKey"]));
 
-            // Define the signing credentials using HMAC SHA512
+            // Define the signing credentials using HMAC SHA512 algorithm.
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
-            // Define token settings including claims, expiration, and signing
+            // Define token settings including claims, expiration time, and signing credentials.
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddMinutes(10), // Short-lived access token
-                SigningCredentials = creds
+                Subject = new ClaimsIdentity(claims), // Attach claims to the token
+                Expires = DateTime.UtcNow.AddMinutes(10), // Set token expiration time
+                SigningCredentials = creds // Use the defined signing credentials
             };
 
-            // Create and write the JWT token
+            // Create and write the JWT token using the token handler.
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+            return tokenHandler.WriteToken(token); // Return the serialized token
         }
 
-        // Generates a secure refresh token (random 32-byte base64 string)
+        /// <summary>
+        /// Generates a secure refresh token (random 32-byte base64 string).
+        /// </summary>
+        /// <returns>A new refresh token object.</returns>
         public RefreshToken GenerateRefreshToken()
         {
+            // Generate a random 32-byte array for the refresh token.
             var randomNumber = new byte[32];
             using var rng = RandomNumberGenerator.Create();
             rng.GetBytes(randomNumber);
+
+            // Return the refresh token as a base64-encoded string.
             return new RefreshToken { Token = Convert.ToBase64String(randomNumber) };
         }
     }

@@ -3,31 +3,38 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    // Controller responsible for managing user photos:
-    // adding, deleting, and setting the main profile photo
-
+    /// <summary>
+    /// Controller responsible for managing user photos: adding, deleting, and setting the main profile photo.
+    /// </summary>
     public class PhotosController : BaseApiController
     {
-        // POST: api/photos
-        // Uploads a new photo for the currently authenticated user
-        // The photo is expected to come from a multipart/form-data form
+        /// <summary>
+        /// Uploads a new photo for the currently authenticated user.
+        /// </summary>
+        /// <param name="command">The command containing the photo data.</param>
+        /// <returns>An IActionResult indicating the result of the operation.</returns>
         [HttpPost]
         public async Task<IActionResult> Add([FromForm] Add.Command command)
         {
             return HandleResult(await Mediator.Send(command));
         }
 
-        // DELETE: api/photos/{id}
-        // Deletes the photo with the specified ID from the current user's photo collection
+        /// <summary>
+        /// Deletes the photo with the specified ID from the current user's photo collection.
+        /// </summary>
+        /// <param name="id">The ID of the photo to delete.</param>
+        /// <returns>An IActionResult indicating the result of the operation.</returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
             return HandleResult(await Mediator.Send(new Delete.Commend { Id = id }));
         }
 
-        // POST: api/photos/{id}/setMain
-        // Sets the specified photo as the main photo for the user
-        // Unmarks the current main photo
+        /// <summary>
+        /// Sets the specified photo as the main photo for the user.
+        /// </summary>
+        /// <param name="id">The ID of the photo to set as main.</param>
+        /// <returns>An IActionResult indicating the result of the operation.</returns>
         [HttpPost("{id}/setMain")]
         public async Task<IActionResult> SetMain(string id)
         {

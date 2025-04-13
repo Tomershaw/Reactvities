@@ -1,3 +1,6 @@
+// This file contains the FacebookDto class and related classes for deserializing Facebook Graph API user data.
+// It includes fields such as user ID, email, name, and profile picture.
+
 namespace API.DTOs
 {
     // Data Transfer Object for deserializing Facebook Graph API user data

@@ -11,9 +11,17 @@ using Persistence;
 
 namespace API.Extensions
 {
-    // Extension method for IServiceCollection to register all application-level services
+    /// <summary>
+    /// Registers application-level services such as database context, CORS, MediatR, and others.
+    /// </summary>
     public static class ApplicationServiceExtensions
     {
+        /// <summary>
+        /// Configures application-level services.
+        /// </summary>
+        /// <param name="services">The service collection to configure.</param>
+        /// <param name="config">The application configuration object.</param>
+        /// <returns>The updated service collection.</returns>
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config)
         {
             // Swagger/OpenAPI support

@@ -1,13 +1,15 @@
+// This file contains the RegisterDto class, which is used for user registration requests.
+// It includes fields required for creating a new user account.
+
 using System.ComponentModel.DataAnnotations;
 
 namespace API.DTOs
 {
     // Data Transfer Object used for user registration requests
-    // Contains required fields for creating a new user account
 
     public class RegisterDto
     {
-        // User's display name (e.g. full name shown in the app)
+        // User's display name (e.g., full name shown in the app)
         [Required]
         public string DisplayName { get; set; }
 
@@ -16,8 +18,7 @@ namespace API.DTOs
         [EmailAddress]
         public string Email { get; set; }
 
-        // User's password - must be between 4 and 8 characters, contain at least one digit,
-        // one lowercase letter, and one uppercase letter
+        // User's password - must meet complexity requirements
         [Required]
         [RegularExpression("(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{4,8}$", ErrorMessage = "Password must be complex ")]
         public string Password { get; set; }

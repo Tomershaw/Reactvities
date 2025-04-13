@@ -1,12 +1,22 @@
 using System.Text.Json;
 
+// Summary: This file provides extension methods for enhancing HTTP responses with additional metadata.
+
 namespace API.Extensions
 {
-    // Extension methods for enhancing HTTP responses with additional metadata
+    /// <summary>
+    /// Enhances HTTP responses with additional metadata.
+    /// </summary>
     public static class HttpExtensions
     {
-        // Adds a custom Pagination header to the HTTP response
-        // This header includes metadata about the current page, total items, etc.
+        /// <summary>
+        /// Adds a custom Pagination header to the HTTP response.
+        /// </summary>
+        /// <param name="response">The HTTP response to modify.</param>
+        /// <param name="currentPage">The current page number.</param>
+        /// <param name="itemsPerPage">The number of items per page.</param>
+        /// <param name="totalItems">The total number of items.</param>
+        /// <param name="totalPages">The total number of pages.</param>
         public static void AddPaginationHeader(this HttpResponse response, int currentPage,
             int itemsPerPage, int totalItems, int totalPages)
         {
@@ -18,12 +28,12 @@ namespace API.Extensions
                 totalPages
             };
 
-            // Add the pagination data as a serialized JSON header
             response.Headers.Add("Pagination", JsonSerializer.Serialize(paginationHeader));
 
-            // Note: To make this header visible to client apps (e.g., browsers), 
-            // you can expose it via CORS using: 
+            // Note: To expose this header to client apps, use:
             // response.Headers.Add("Access-Control-Expose-Headers", "Pagination");
         }
     }
 }
+
+// Summary: This file provides extension methods for enhancing HTTP responses with additional metadata.

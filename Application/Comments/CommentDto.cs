@@ -1,26 +1,35 @@
+// This file contains the CommentDto class, which represents a comment.
+// It is used to send comment data from the server to the client.
+
 namespace Application.Comments
 {
-    // Data Transfer Object representing a comment.
-    // Used to send comment data from the server to the client (e.g., in real-time chat or activity detail view).
+    // Data Transfer Object (DTO) representing a comment.
+    // This is used to transfer comment data between the server and client.
 
     public class CommentDto
     {
-        // Unique identifier for the comment
+        // Unique identifier for the comment.
+        // This is the primary key for identifying a comment.
         public int Id { get; set; }
 
-        // Timestamp of when the comment was created
+        // Timestamp indicating when the comment was created.
+        // This helps in sorting or displaying comments chronologically.
         public DateTime CreateAt { get; set; }
 
-        // The actual content/text of the comment
+        // The actual content or text of the comment.
+        // This is the main body of the comment.
         public string Body { get; set; }
 
-        // Username of the user who posted the comment
+        // The username of the user who posted the comment.
+        // This is used to identify the author of the comment.
         public string Username { get; set; }
 
-        // Display name of the user who posted the comment
+        // The display name of the user who posted the comment.
+        // This is a more user-friendly name for display purposes.
         public string DisplayName { get; set; }
 
-        // URL to the user's profile image
+        // URL to the profile image of the user who posted the comment.
+        // This is used to display the user's avatar alongside the comment.
         public string Image { get; set; }
     }
 }

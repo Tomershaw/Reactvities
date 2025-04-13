@@ -8,28 +8,44 @@ using Persistence;
 
 namespace Application.Followers
 {
-    // CQRS command for toggling the "follow" state between the current user and a target user.
-
+    /// <summary>
+    /// CQRS command for toggling the "follow" state between the current user and a target user.
+    /// </summary>
     public class FollowToggle
     {
-        // Command contains the username of the user to follow or unfollow
+        /// <summary>
+        /// Command contains the username of the user to follow or unfollow.
+        /// </summary>
         public class Command : IRequest<Result<Unit>>
         {
             public string TargetUsername { get; set; }
         }
 
-        // Handler that processes the follow/unfollow logic
+        /// <summary>
+        /// Handler that processes the follow/unfollow logic.
+        /// </summary>
         public class Handler : IRequestHandler<Command, Result<Unit>>
         {
-            public DataContext _context;
-            private readonly IUserAccessor _userAccessor;
+            private readonly DataContext _context; // Database context for accessing user and follow data
+            private readonly IUserAccessor _userAccessor; // Service to get the current user's username
 
+            /// <summary>
+            /// Constructor: Injects dependencies (DataContext, IUserAccessor).
+            /// </summary>
+            /// <param name="context">The database context.</param>
+            /// <param name="userAccessor">The user accessor service.</param>
             public Handler(DataContext context, IUserAccessor userAccessor)
             {
                 _userAccessor = userAccessor;
                 _context = context;
             }
 
+            /// <summary>
+            /// Handles the follow/unfollow operation.
+            /// </summary>
+            /// <param name="request">The command containing the target username.</param>
+            /// <param name="cancellationToken">Token to cancel the operation.</param>
+            /// <returns>A Result indicating success or failure.</returns>
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
                 // Get the current user (observer)

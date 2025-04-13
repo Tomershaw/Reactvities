@@ -9,6 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
+    /// <summary>
+    /// Controller responsible for managing user accounts, authentication, and authorization.
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class AccountController : ControllerBase
@@ -18,8 +21,12 @@ namespace API.Controllers
         private readonly IConfiguration _config;
         private readonly HttpClient _httpClient;
 
-        // Constructor: Injects dependencies (UserManager, TokenService, IConfiguration)
-        // Also initializes HttpClient to communicate with Facebook Graph API
+        /// <summary>
+        /// Constructor: Injects dependencies (UserManager, TokenService, IConfiguration).
+        /// </summary>
+        /// <param name="userManager">The UserManager for managing user accounts.</param>
+        /// <param name="tokenService">The TokenService for generating JWT tokens.</param>
+        /// <param name="config">The application configuration.</param>
         public AccountController(UserManager<AppUser> userManager, TokenService tokenService, IConfiguration config)
         {
             _config = config;
@@ -31,9 +38,11 @@ namespace API.Controllers
             };
         }
 
-        // POST: api/account/login
-        // Authenticates user by email and password
-        // Returns 401 if credentials are invalid
+        /// <summary>
+        /// Authenticates user by email and password.
+        /// </summary>
+        /// <param name="loginDto">The login credentials.</param>
+        /// <returns>A UserDto if authentication is successful, otherwise Unauthorized.</returns>
         [AllowAnonymous]
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
@@ -54,9 +63,11 @@ namespace API.Controllers
             return Unauthorized();
         }
 
-        // POST: api/account/register
-        // Registers a new user account
-        // Validates email and username are not already taken
+        /// <summary>
+        /// Registers a new user account.
+        /// </summary>
+        /// <param name="registerDto">The registration details.</param>
+        /// <returns>A UserDto if registration is successful, otherwise BadRequest or ValidationProblem.</returns>
         [AllowAnonymous]
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
@@ -91,9 +102,11 @@ namespace API.Controllers
             return BadRequest(result.Errors);
         }
 
-        // POST: api/account/fbLogin
-        // Handles login or registration via Facebook OAuth token
-        // If user doesn't exist, creates a new one using Facebook profile info
+        /// <summary>
+        /// Handles login or registration via Facebook OAuth token.
+        /// </summary>
+        /// <param name="accessToken">The Facebook OAuth access token.</param>
+        /// <returns>A UserDto if successful, otherwise Unauthorized or BadRequest.</returns>
         [AllowAnonymous]
         [HttpPost("fbLogin")]
         public async Task<ActionResult<UserDto>> FacebookLogin(string accessToken)
@@ -137,9 +150,10 @@ namespace API.Controllers
             return CreateUserObject(user);
         }
 
-        // GET: api/account
-        // Retrieves the currently authenticated user based on JWT token
-        // Also sets a new refresh token
+        /// <summary>
+        /// Retrieves the currently authenticated user based on JWT token.
+        /// </summary>
+        /// <returns>A UserDto representing the authenticated user.</returns>
         [Authorize]
         [HttpGet]
         public async Task<ActionResult<UserDto>> GetCuttentUser()
@@ -151,9 +165,10 @@ namespace API.Controllers
             return CreateUserObject(user);
         }
 
-        // POST: api/account/refreshToken
-        // Validates and rotates the refresh token stored in cookies
-        // Returns new access token and refresh token in cookie
+        /// <summary>
+        /// Validates and rotates the refresh token stored in cookies.
+        /// </summary>
+        /// <returns>A UserDto with new access and refresh tokens.</returns>
         [Authorize]
         [HttpPost("refreshToken")]
         public async Task<ActionResult<UserDto>> RefreshToken()
@@ -176,8 +191,10 @@ namespace API.Controllers
             return CreateUserObject(user);
         }
 
-        // Generates a new refresh token and sets it in an HttpOnly cookie
-        // The token is stored in the database and valid for 7 days
+        /// <summary>
+        /// Generates a new refresh token and sets it in an HttpOnly cookie.
+        /// </summary>
+        /// <param name="user">The user for whom the refresh token is generated.</param>
         private async Task SetRefreshToken(AppUser user)
         {
             var refreshToken = _tokenService.GenerateRefreshToken();
@@ -193,8 +210,11 @@ namespace API.Controllers
             Response.Cookies.Append("refreshToken", refreshToken.Token, cookieOption);
         }
 
-        // Builds a UserDto from an AppUser instance
-        // Includes token, display name, username, image URL, and permission flag
+        /// <summary>
+        /// Builds a UserDto from an AppUser instance.
+        /// </summary>
+        /// <param name="user">The AppUser instance.</param>
+        /// <returns>A UserDto representing the user.</returns>
         private UserDto CreateUserObject(AppUser user)
         {
             return new UserDto

@@ -10,8 +10,14 @@ namespace Application.Activities
 
     public class ActivityParams : PagingParams
     {
+        // Indicates whether to filter activities the user is attending.
         public bool IsGoing { get; set; }
+
+        // Indicates whether to filter activities the user is hosting.
         public bool IsHost { get; set; }
+
+        // Specifies the start date for filtering activities.
+        // Defaults to the current UTC date and time.
         public DateTime StartDate { get; set; } = DateTime.UtcNow;
     }
 }

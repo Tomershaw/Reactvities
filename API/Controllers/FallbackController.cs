@@ -3,14 +3,17 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    // Controller that serves the fallback route for unmatched client-side routes
-    // Used to support single-page applications (SPA) with client-side routing
-
+    /// <summary>
+    /// Controller that serves the fallback route for unmatched client-side routes.
+    /// Used to support single-page applications (SPA) with client-side routing.
+    /// </summary>
     [AllowAnonymous]
     public class FallbackController : Controller
     {
-        // GET: fallback route (e.g., when no other API or static file matches the request)
-        // Returns the SPA entry point: index.html from the wwwroot directory
+        /// <summary>
+        /// Returns the SPA entry point: index.html from the wwwroot directory.
+        /// </summary>
+        /// <returns>The index.html file.</returns>
         public IActionResult Index()
         {
             return PhysicalFile(

@@ -9,9 +9,17 @@ using Persistence;
 
 namespace API.Extensions
 {
-    // Extension method to configure identity, authentication, and authorization services
+    /// <summary>
+    /// Configures identity, authentication, and authorization services for the application.
+    /// </summary>
     public static class IdentityServiceExtensions
     {
+        /// <summary>
+        /// Adds identity, authentication, and authorization services to the application.
+        /// </summary>
+        /// <param name="services">The service collection to configure.</param>
+        /// <param name="config">The application configuration object.</param>
+        /// <returns>The updated service collection.</returns>
         public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration config)
         {
             // Configure ASP.NET Identity for user management with custom options
@@ -78,3 +86,5 @@ namespace API.Extensions
         }
     }
 }
+
+// Summary: This file provides extension methods for configuring identity, authentication, and authorization services.

@@ -1,25 +1,25 @@
 namespace Application.Core
 {
     // Represents a standardized structure for API error responses.
-    // Typically used by global exception middleware to return consistent error details.
+    // Used by global exception middleware to return consistent error details to the client.
 
     public class AppException
     {
-        // Constructor for setting the status code, message, and optional details
+        // Constructor to initialize the exception with status code, message, and optional details.
         public AppException(int statusCode, string message, string detalis = null)
         {
-            StatusCode = statusCode;
-            Message = message;
-            Detalis = detalis;
+            StatusCode = statusCode; // The HTTP status code (e.g., 400 for Bad Request, 500 for Internal Server Error).
+            Message = message; // A human-readable error message describing the issue.
+            Detalis = detalis; // Optional technical details (e.g., stack trace or inner exception).
         }
 
-        // HTTP status code (e.g. 400, 500)
+        // The HTTP status code associated with the error.
         public int StatusCode { get; set; }
 
-        // Human-readable error message
+        // A human-readable error message for the client.
         public string Message { get; set; }
 
-        // Optional technical details (e.g. stack trace or inner exception)
+        // Optional technical details for debugging purposes.
         public string Detalis { get; set; }
     }
 }

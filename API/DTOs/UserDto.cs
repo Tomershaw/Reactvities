@@ -1,7 +1,9 @@
+// This file contains the UserDto class, which represents a user returned to the client.
+// It is used after successful authentication or when fetching user details.
+
 namespace API.DTOs
 {
     // Data Transfer Object representing a user returned to the client
-    // This is used after successful authentication or when fetching user details
 
     public class UserDto
     {
@@ -17,7 +19,7 @@ namespace API.DTOs
         // The user's unique username
         public string Username { get; set; }
 
-        // Indicates whether the user is allowed to create activities (e.g. host events)
+        // Indicates whether the user is allowed to create activities (e.g., host events)
         public bool CanCreateActivity { get; set; }
     }
 }
