@@ -1,3 +1,4 @@
+// Importing necessary modules and types for API requests and responses
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { Activity, ActivityFormValues } from "../models/activity";
 import { toast } from "react-toastify";
@@ -7,26 +8,33 @@ import { User, UserFormValues } from "../models/user";
 import Photo, { Profile, UserActivity } from "../models/profile";
 import { PaginatedResult } from "../models/pagination";
 
+// Utility function to simulate a delay (useful for development purposes)
 const sleep = (delay: number) => {
   return new Promise(resolve => {
     setTimeout(resolve, delay);
   });
 };
 
+// Setting the base URL for Axios requests from environment variables
 axios.defaults.baseURL = import.meta.env.VITE_API_URL;
 
+// Helper function to extract the response body from Axios responses
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
+// Adding a request interceptor to include the Authorization token in headers
 axios.interceptors.request.use(config => {
   const token = store.commonStore.token;
   if (token && config.headers) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 
+// Adding a response interceptor to handle delays, pagination, and errors
 axios.interceptors.response.use(
   async response => {
+    // Simulate a delay in development mode
     if (import.meta.env.DEV) await sleep(1000);
 
+    // Handle pagination headers if present
     const pagination = response.headers["pagination"];
     if (pagination) {
       response.data = new PaginatedResult(
@@ -38,9 +46,11 @@ axios.interceptors.response.use(
     return response;
   },
   (error: AxiosError) => {
+    // Extracting error details from the response
     const { data, status, config, headers } = error.response as AxiosResponse;
     switch (status) {
       case 400:
+        // Handle validation errors or navigation for missing resources
         if (
           config.method === "get" &&
           Object.prototype.hasOwnProperty.call(data.errors, "id")
@@ -58,6 +68,7 @@ axios.interceptors.response.use(
         }
         break;
       case 401:
+        // Handle unauthorized errors and session expiration
         if (
           status === 401 &&
           headers["www-authenticate"]?.startsWith(
@@ -69,15 +80,17 @@ axios.interceptors.response.use(
         } else {
           toast.error("unauthorised");
         }
-        toast.error("unauthorised");
         break;
       case 403:
+        // Handle forbidden errors
         toast.error("forbidden");
         break;
       case 404:
+        // Navigate to not-found page for 404 errors
         router.navigate("/not-found");
         break;
       case 500:
+        // Handle server errors and navigate to server-error page
         store.commonStore.setServerError(data);
         router.navigate("/server-error");
         break;
@@ -86,6 +99,7 @@ axios.interceptors.response.use(
   }
 );
 
+// Utility object for making HTTP requests with predefined methods
 const requests = {
   get: <T>(url: string) => axios.get<T>(url).then(responseBody),
   post: <T>(url: string, body: object) =>
@@ -95,6 +109,7 @@ const requests = {
   del: <T>(url: string) => axios.delete<T>(url).then(responseBody),
 };
 
+// API endpoints for managing activities
 const Activities = {
   list: (params: URLSearchParams) =>
     axios
@@ -109,6 +124,7 @@ const Activities = {
   attend: (id: string) => requests.post<void>(`/activities/${id}/attend`, {}),
 };
 
+// API endpoints for account-related operations
 const Account = {
   current: () => requests.get<User>("account"),
   login: (user: UserFormValues) => requests.post<User>("/account/login", user),
@@ -118,6 +134,8 @@ const Account = {
     requests.post<User>(`/account/fbLogin?accessToken=${accessToken}`, {}),
   refreshToken: () => requests.post<User>(`/account/refreshToken`, {}),
 };
+
+// API endpoints for managing user profiles
 const Profiles = {
   get: (username: string) => requests.get<Profile>(`profiles/${username}`),
   uploadPhoto: (file: Blob) => {
@@ -139,6 +157,7 @@ const Profiles = {
     ),
 };
 
+// Exporting the agent object containing all API endpoints
 const agent = {
   Activities,
   Account,

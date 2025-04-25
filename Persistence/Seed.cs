@@ -39,6 +39,7 @@ namespace Persistence
 
                 foreach (var user in users)
                 {
+                    // Create the user with the specified password.
                     await userManager.CreateAsync(user, "Pa$$w0rd");
                 }
 

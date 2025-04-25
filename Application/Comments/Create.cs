@@ -56,7 +56,9 @@ namespace Application.Comments
             {
                 // Load the activity by ID.
                 var activity = await _context.Activities.FindAsync(request.ActivityId);
-                if (activity == null) return null; // Return null if the activity is not found.
+                if (activity == null)
+                return Result<CommentDto>.Failure("Activity not found"); // Return null if the activity is not found.
+                
 
                 // Load the current user with their photos.
                 var user = await _context.Users

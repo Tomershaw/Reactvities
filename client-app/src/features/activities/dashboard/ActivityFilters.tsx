@@ -1,34 +1,36 @@
-import { observer } from 'mobx-react-lite';
-    import Calendar from 'react-calendar';
-import { Header, Menu } from 'semantic-ui-react';
-import { useStore } from '../../../app/stores/store';
+import { observer } from "mobx-react-lite";
+import Calendar from "react-calendar";
+import { Header, Menu } from "semantic-ui-react";
+import { useStore } from "../../../app/stores/store";
 
+// Provides filters for the activity list
+// Includes options to filter by participation and a calendar for date selection
 export default observer(function ActivityFilters() {
-    const {activityStore: {predicate, setPredicate}} = useStore();
-    return (
-        <>
-            <Menu vertical size='large' style={{ width: '100%', marginTop: 25 }}>
-                <Header icon='filter' attached color='teal' content='Filters' />
-                <Menu.Item
-                    content='All Activites'
-                    active={predicate.has('all')}
-                    onClick={() => setPredicate('all', 'true')}
-                />
-                <Menu.Item
-                    content="I'm going"
-                    active={predicate.has('isGoing')}
-                    onClick={() => setPredicate('isGoing', 'true')}
-                />
-                <Menu.Item
-                    content="I'm hosting"
-                    active={predicate.has('isHost')}
-                    onClick={() => setPredicate('isHost', 'true')}
-                />
-            </Menu>
-            <Header />
-            <Calendar
-                onChange={(date) => setPredicate('startDate', date as Date)}
-            />
-        </>
-    )
-})
+  const {
+    activityStore: { predicate, setPredicate },
+  } = useStore();
+  return (
+    <>
+      <Menu vertical size="large" style={{ width: "100%", marginTop: 25 }}>
+        <Header icon="filter" attached color="teal" content="Filters" />
+        <Menu.Item
+          content="All Activites"
+          active={predicate.has("all")}
+          onClick={() => setPredicate("all", "true")}
+        />
+        <Menu.Item
+          content="I'm going"
+          active={predicate.has("isGoing")}
+          onClick={() => setPredicate("isGoing", "true")}
+        />
+        <Menu.Item
+          content="I'm hosting"
+          active={predicate.has("isHost")}
+          onClick={() => setPredicate("isHost", "true")}
+        />
+      </Menu>
+      <Header />
+      <Calendar onChange={date => setPredicate("startDate", date as Date)} />
+    </>
+  );
+});

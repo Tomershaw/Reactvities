@@ -28,7 +28,7 @@ namespace Application.Activities
 
             // Constructor injecting database context and user accessor
             public Handler(DataContext context, IUserAccessor userAccessor)
-            {
+            {   
                 _userAccessor = userAccessor;
                 _context = context;
             }

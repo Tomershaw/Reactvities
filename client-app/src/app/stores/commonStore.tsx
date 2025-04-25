@@ -1,34 +1,42 @@
 import { makeAutoObservable, reaction } from "mobx";
 import { ServerError } from "../models/serverError";
 
-export default class CommonStore{
-    error:ServerError | null = null;
-    token:string | null = localStorage.getItem('jwt');
-    appLoaded =false;
+// MobX store for managing common application state
+export default class CommonStore {
+  // Stores server error details
+  error: ServerError | null = null;
+  // JWT token for authentication, persisted in localStorage
+  token: string | null = localStorage.getItem("jwt");
+  // Tracks if the application has fully loaded
+  appLoaded = false;
 
-    constructor(){
-        makeAutoObservable(this);
-        reaction(
-            () =>this.token,
-            token =>{
-                if(token){
-                    localStorage.setItem('jwt',token)
-                }else{
-                    localStorage.removeItem('jwt')
-                }
-            }
-        )
-    }
+  constructor() {
+    makeAutoObservable(this);
+    // Reacts to token changes and updates localStorage accordingly
+    reaction(
+      () => this.token,
+      token => {
+        if (token) {
+          localStorage.setItem("jwt", token);
+        } else {
+          localStorage.removeItem("jwt");
+        }
+      }
+    );
+  }
 
-    setServerError(error: ServerError){
-        this.error = error;
-    }   
+  // Sets the server error state
+  setServerError(error: ServerError) {
+    this.error = error;
+  }
 
-    setToken =(token:string |null) => {
-        this.token =token;
-    }
+  // Updates the JWT token state
+  setToken = (token: string | null) => {
+    this.token = token;
+  };
 
-    setAppLoaded =  () =>{
-        this.appLoaded = true;
-    }
+  // Marks the application as fully loaded
+  setAppLoaded = () => {
+    this.appLoaded = true;
+  };
 }

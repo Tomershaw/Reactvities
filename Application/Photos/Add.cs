@@ -48,8 +48,9 @@ namespace Application.Photos
                     .FirstOrDefaultAsync(x => x.UserName == _userAccessor.GetUsername());
 
                 // Return null if the user is not found
-                if (user == null) return null;
-
+                if (user == null)
+                return Result<Photo>.Failure("User not found");
+    
                 // Upload photo to external storage (e.g., Cloudinary)
                 var PhotoUploadResult = await _photoAccessor.AddPhoto(request.File);
 
@@ -61,7 +62,8 @@ namespace Application.Photos
                 };
 
                 // Set the photo as main if the user has no main photo yet
-                if (!user.Photos.Any(x => x.IsMain)) photo.IsMain = true;
+                if (!user.Photos.Any(x => x.IsMain))
+                    photo.IsMain = true;
 
                 // Add the photo to the user's collection
                 user.Photos.Add(photo);

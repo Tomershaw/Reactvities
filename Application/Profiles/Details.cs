@@ -45,7 +45,8 @@ namespace Application.Profiles
                     .SingleOrDefaultAsync(x => x.UserName == request.Username); // Filter by username
 
                 // If the user is not found, return null
-                if (user == null) return null;
+                if (user == null)
+                return Result<Profile>.Failure("Profile not found");
 
                 // Wrap the result in a success object and return it
                 return Result<Profile>.Success(user);

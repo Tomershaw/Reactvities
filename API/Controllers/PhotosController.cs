@@ -40,5 +40,9 @@ namespace API.Controllers
         {
             return HandleResult(await Mediator.Send(new SetMain.Commend { Id = id }));
         }
+
+        
+
+        
     }
 }

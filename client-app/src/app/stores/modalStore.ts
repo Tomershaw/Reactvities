@@ -1,28 +1,31 @@
 import { makeAutoObservable } from "mobx";
 
-interface Modal{
-    open:boolean;
-    body: JSX.Element | null;
+interface Modal {
+  open: boolean;
+  body: JSX.Element | null;
 }
 
-export default class  ModalStore{
-    modal:Modal ={
-        open:false,
-        body : null
-    }
+// MobX store for managing modal state
+export default class ModalStore {
+  // Represents the modal's open state and content
+  modal: Modal = {
+    open: false,
+    body: null,
+  };
 
-    constructor(){
-        makeAutoObservable(this)
-    }
+  constructor() {
+    makeAutoObservable(this); // Enables reactive state management
+  }
 
-    openModal =(content: JSX.Element) =>{
-        this.modal.open=true;
-        this.modal.body =content;
-    }
+  // Opens the modal with the specified content
+  openModal = (content: JSX.Element) => {
+    this.modal.open = true;
+    this.modal.body = content;
+  };
 
-    closeModal =() =>{
-        this.modal.open =false;
-        this.modal.body =null;  
-    }
-
+  // Closes the modal and clears its content
+  closeModal = () => {
+    this.modal.open = false;
+    this.modal.body = null;
+  };
 }

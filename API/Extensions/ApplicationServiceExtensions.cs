@@ -31,34 +31,7 @@ namespace API.Extensions
             // Configures the database context with environment-based connection string
             services.AddDbContext<DataContext>(options =>
             {
-                var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-                string connStr;
-
-                // Use connection string from appsettings.json in Development
-                if (env == "Development")
-                {
-                    connStr = config.GetConnectionString("DefaultConnection");
-                }
-                else
-                {
-                    // Parse DATABASE_URL from FlyIO in Production
-                    var connUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
-                    connUrl = connUrl.Replace("postgres://", string.Empty);
-                    var pgUserPass = connUrl.Split("@")[0];
-                    var pgHostPortDb = connUrl.Split("@")[1];
-                    var pgHostPort = pgHostPortDb.Split("/")[0];
-                    var pgDb = pgHostPortDb.Split("/")[1];
-                    var pgUser = pgUserPass.Split(":")[0];
-                    var pgPass = pgUserPass.Split(":")[1];
-                    var pgHost = pgHostPort.Split(":")[0];
-                    var pgPort = pgHostPort.Split(":")[1];
-                    var updatedHost = pgHost.Replace("flycast", "internal");
-
-                    connStr = $"Server={updatedHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};";
-                }
-
-                // Apply the connection string to Npgsql database provider
-                options.UseNpgsql(connStr);
+                options.UseSqlServer(config.GetConnectionString("DefaultConnection"));
             });
 
             // Configures CORS to allow client app communication (e.g. React frontend)

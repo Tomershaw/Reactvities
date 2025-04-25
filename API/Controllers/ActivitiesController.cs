@@ -32,7 +32,15 @@ namespace API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetActivity(Guid id)
         {
-            return HandleResult(await Mediator.Send(new Detalis.Query { Id = id }));
+            try
+            {
+                var result = await Mediator.Send(new Detalis.Query { Id = id });
+                return HandleResult(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         /// <summary>
@@ -58,7 +66,7 @@ namespace API.Controllers
         public async Task<IActionResult> EditActivity(Guid id, Activity activity)
         {
             activity.Id = id;
-            return HandleResult(await Mediator.Send(new Edit.Commend { Activity = activity }));
+            return HandleResult(await Mediator.Send(new Edit.Command { Activity = activity }));
         }
 
         /// <summary>
