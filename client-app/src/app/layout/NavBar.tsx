@@ -27,7 +27,9 @@ export default observer(function NavBar() {
         {/* Link to activities page */}
         <Menu.Item as={NavLink} to="/activities" name="Activity" />
         {/* Link to errors page */}
-        <Menu.Item as={NavLink} to="/errors" name="Errors" />
+        {process.env.NODE_ENV === 'development' && (
+         <Menu.Item as={NavLink} to="/errors" name="Errors" />
+       )}
         {/* Button to create a new activity, visible only if the user has permission */}
         {user?.canCreateActivity && (
           <Menu.Item>

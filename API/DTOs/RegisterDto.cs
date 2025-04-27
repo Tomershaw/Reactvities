@@ -20,7 +20,7 @@ namespace API.DTOs
 
         // User's password - must meet complexity requirements
         [Required]
-        [RegularExpression("(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{4,8}$", ErrorMessage = "Password must be complex ")]
+        [RegularExpression("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{6,12}$", ErrorMessage = "Password must be between 4 and 8 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character.")]
         public string Password { get; set; }
 
         // Unique username for login and identification
