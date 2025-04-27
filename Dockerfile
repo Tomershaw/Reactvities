@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS bulid-env
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS bulid-env
 WORKDIR /app
 EXPOSE 8080
 
