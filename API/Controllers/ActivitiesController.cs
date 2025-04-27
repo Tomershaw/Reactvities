@@ -34,6 +34,7 @@ namespace API.Controllers
         {
             try
             {
+                Console.WriteLine("GetActivity called with ID: " + id);
                 var result = await Mediator.Send(new Detalis.Query { Id = id });
                 return HandleResult(result);
             }
