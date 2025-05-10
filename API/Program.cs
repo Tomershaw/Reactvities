@@ -14,6 +14,10 @@ using API.SignalR;
 using Microsoft.AspNetCore.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.ListenAnyIP(80);
+});
 
 // Add services to the container.
 builder.Services.AddControllers(opt =>

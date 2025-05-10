@@ -1,24 +1,23 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS bulid-env
+# שלב 1 - בסיס להרצה
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
-EXPOSE 8080
+EXPOSE 80
 
-# copy .csproj and restore as distinct layers
-COPY "Reactivities.sln" "Reactivities.sln"
-COPY "API/API.csproj" "API/API.csproj"
-COPY "Application/Application.csproj" "Application/Application.csproj"
-COPY "Persistence/Persistence.csproj" "Persistence/Persistence.csproj"
-COPY "Domain/Domain.csproj" "Domain/Domain.csproj"
-COPY "Infrastructure/Infrastructure.csproj" "Infrastructure/Infrastructure.csproj"
+# שלב 2 - בסיס לבנייה
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
+WORKDIR /app
+
+# העתק את כל הקבצים
+COPY . .
+
+# שחזור התלויות
 RUN dotnet restore "Reactivities.sln"
 
-# copy everything else bulid
-COPY . . 
-RUN dotnet publish -c Release -o out 
+# בנייה ופרסום
+RUN dotnet publish "API/API.csproj" -c Release -o /app/publish
 
-# bulid a run time image 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+# שלב 3 - בניית התמונה הסופית
+FROM base AS final
 WORKDIR /app
-COPY --from=bulid-env /app/out .
-ENTRYPOINT [ "dotnet","API.dll" ]
-
-
+COPY --from=build-env /app/publish .
+ENTRYPOINT ["dotnet", "API.dll"]
