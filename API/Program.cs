@@ -32,6 +32,9 @@ builder.Services.AddIdentityServices(builder.Configuration);
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionMiddleware>();
+// ✅ חייבים להיות לפני כל האבטחות וה־routing
+app.UseDefaultFiles(); 
+app.UseStaticFiles();
 
 app.UseXContentTypeOptions();
 app.UseReferrerPolicy(opt => opt.NoReferrer());
@@ -60,8 +63,6 @@ app.UseCors("CorsPolicy");
 app.UseAuthentication();    
 app.UseAuthorization();
 
-app.UseDefaultFiles();
-app.UseStaticFiles();
 
 app.MapControllers();
 app.MapHub<ChatHub>("/chat");
