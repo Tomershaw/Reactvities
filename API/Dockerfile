@@ -1,26 +1,15 @@
-# שלב 1 - בסיס להרצה
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-WORKDIR /app
-EXPOSE 80
-
-# שלב 2 - בסיס לבנייה
+# שלב 1: build
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /src
-
-# העתק את כל הפתרון
-COPY . .
-
-# תיכנס לספריית API
-WORKDIR /src/API
-
-# עכשיו Restore
-RUN dotnet restore "API.csproj"
-
-# עכשיו Publish
-RUN dotnet publish "API.csproj" -c Release -o /app/publish
-
-# שלב 3 - הרצה סופית
-FROM base AS final
 WORKDIR /app
-COPY --from=build /app/publish .
+
+COPY . . 
+RUN dotnet restore
+RUN dotnet publish -c Release -o out
+
+# שלב 2: runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+WORKDIR /app
+COPY --from=build /app/out .
+
+EXPOSE 8080
 ENTRYPOINT ["dotnet", "API.dll"]
